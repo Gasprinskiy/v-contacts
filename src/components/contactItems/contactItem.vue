@@ -22,7 +22,7 @@
                         > 
                     </span>
                 </span> 
-                <span class="info-inner">
+                <span class="info-inner" v-if="hasEmail">
                     Email: <span>{{props.contact.email}}</span>
                 </span>   
             </h3>
@@ -35,7 +35,7 @@
 
 // imports
 import { NIcon } from 'naive-ui'
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
 import { useRouter } from 'vue-router';
 import { PersonCircleOutline } from '@vicons/ionicons5'
 import { TheMask } from 'vue-the-mask'
@@ -48,6 +48,10 @@ const props = defineProps({
         default: {}
     }
 })
+/////////////
+
+// computed
+const hasEmail = computed(()=> props.contact.email !== '')
 /////////////
 
 // data
