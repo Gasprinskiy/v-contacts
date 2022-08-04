@@ -53,7 +53,13 @@
                 placeholder="Full Name"
                 v-model:value="formValues.fullname"
                 :status="isFullnameValid"
-            />
+            >
+                <template #prefix>
+                    <n-icon
+                        :component="PersonCircleOutline"
+                    />
+                </template>
+            </n-input>
             <n-input
                 type="text"
                 placeholder="Phone number"
@@ -61,13 +67,25 @@
                 v-model:value="maskedPhoneNumber"
                 @input="updatePhoneNumber"
                 :status="isPhonenumberValid"
-            />
+            >
+                <template #prefix>
+                    <n-icon
+                        :component="CallOutline"
+                    />
+                </template>
+            </n-input>
             <n-input
                 type="text"
                 placeholder="Email"
                 v-model:value="formValues.email"
                 :status="isEmailValid"
-            />
+            >
+                <template #prefix>
+                    <n-icon
+                        :component="MailOutline"
+                    />
+                </template>
+            </n-input>
             <n-select
                 placeholder="Where is the fucking placeholder"
                 v-model:value="formValues.group"
@@ -80,10 +98,17 @@
 <script setup>
 // imports
 import { NInput, NSelect, NButton, NIcon } from 'naive-ui'
-import { CreateOutline, SaveOutline, RemoveCircleOutline } from '@vicons/ionicons5'
+import { 
+    CreateOutline, 
+    SaveOutline, 
+    RemoveCircleOutline,
+    PersonCircleOutline,
+    CallOutline,
+    MailOutline
+} from '@vicons/ionicons5'
 import { onBeforeMount, computed, ref, toRaw, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
-import { getDataById } from '../services/dbRequests/'
+import { getDataByKeyValue } from '../services/dbRequests/'
 import { splitFullName } from '../services/helpers/'
 import headingTemplate from './templates/headingTemplate.vue'
 
@@ -165,6 +190,7 @@ const validateAndEmitSaveContactChanges = () => {
         emitName: 'edit-contact',
         payload: toRaw(formValues.value)
     })
+    sourceFormValue.value = JSON.stringify(formValues.value)
 }
 
 const validateAndEmitContactRemove = () => {
@@ -176,9 +202,9 @@ const validateAndEmitContactRemove = () => {
 
 const getDataUserDataByRouteParams = async () => {
     if(isRedact.value) {
-        await getDataById({
+        await getDataByKeyValue({
             target: 'contacts',
-            id: Number(route.params.id)
+            keyValue: {id: Number(route.params.id)} 
         })
         .then(data => {
             formValues.value = data
