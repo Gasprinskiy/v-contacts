@@ -7,18 +7,24 @@ export const getSortedData = async ({target, sortvalue}) => {
     return makeFirstLetterSections({array: response, target: sortvalue})
 }
 
-export const getDataById = async ({target, id}) => {
-    return await db[target].get(id)
+export const getDataByKeyValue = async ({target, keyValue}) => {
+    return await db[target].get(keyValue)
 }
 
-export const searchInDbByKeyWords = async ({target, where, words, filterResult = false, filtertarget, filtervalue }) => {
+export const getDataCountByKeyValue = async ({target, key, value}) => {
+    return await db[target].where(key).equalsIgnoreCase(value).count()
+}
+
+export const searchInDbByKeyWords = async ({target, where, words, filtertarget, filtervalue }) => {
     const firstKey = where.shift()
     let searchChain = `db['${target}'].where('${firstKey}').startsWithAnyOfIgnoreCase('${words}')`
-    where.forEach(key => {
-        searchChain += `.or('${key}').startsWithAnyOfIgnoreCase('${words}')`
-    });
+    if(where) {
+        where.forEach(key => {
+            searchChain += `.or('${key}').startsWithAnyOfIgnoreCase('${words}')`
+        });
+    }
     const result = eval(searchChain)
-    if(filterResult) { result.and(item => item[filtertarget] === filtervalue) }
+    if(filtervalue !== '') { result.and(item => item[filtertarget] === filtervalue) }
     return result.toArray()
 }
 
