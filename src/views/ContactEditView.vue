@@ -1,7 +1,7 @@
 <template>
     <contact-form 
-        @edit-contact="test"
-        @remove-contact="test1"
+        @edit-contact="saveEditedContactInfo"
+        @remove-contact="removeContact"
     />
 </template>
 
@@ -19,7 +19,7 @@ const router = useRouter()
 /////////////
 
 // methods
-const test = async (value) => {
+const saveEditedContactInfo = async (value) => {
     await putData({
         target: 'contacts',
         payload: value
@@ -31,7 +31,7 @@ const test = async (value) => {
     })
 }
 
-const test1 = async (value) => {
+const removeContact = async (value) => {
     await deleteData({
         target: 'contacts',
         id: value

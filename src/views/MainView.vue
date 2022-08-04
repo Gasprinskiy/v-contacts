@@ -40,6 +40,10 @@
                     v-if="searchResultEmpty"
                     description="No results ☹️"
                 />
+                <n-empty
+                    v-if="contactListEmpty"
+                    description="No contacts yet"
+                />
             </n-scrollbar>
         </div>
     </div>
@@ -67,6 +71,7 @@ const searchMode = ref(false)
 
 // computed 
 const searchResultEmpty = computed(()=> searchMode.value && searchData.value.length <= 0)
+const contactListEmpty = computed(()=> sortedData.value.length <= 0)
 /////////////////
 
 // methods
@@ -76,16 +81,16 @@ const getSortedContactList = async () => {
 
 const searchDataInDb = async (querry, selectedVal) => {
     const empty = (querry === '' && selectedVal === '')
-    const selectEmpty = selectedVal === ''
     searchMode.value = !empty
-    searchData.value  = await searchInDbByKeyWords({
-        target: 'contacts',
-        where: ['name', 'surname', 'patronymic', 'email', 'phonenumber'],
-        words: querry,
-        filterResult: !selectEmpty,
-        filtertarget: 'group',
-        filtervalue: selectedVal
-    })
+    if(!empty){
+        searchData.value  = await searchInDbByKeyWords({
+            target: 'contacts',
+            where: ['name', 'surname', 'patronymic', 'email', 'phonenumber'],
+            words: querry,
+            filtertarget: 'group',
+            filtervalue: selectedVal
+        })
+    }
 }
 
 // hooks
@@ -108,7 +113,7 @@ onBeforeMount(()=> getSortedContactList())
   }
 
   .main-view-body {
-    height: calc(100vh - 105.98px);
+    height: calc(100vh - 115.98px);
   }
 
   .body-search-bar {
