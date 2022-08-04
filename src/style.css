@@ -51,6 +51,7 @@ input {
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem 2rem 0rem 2rem;
+  position: relative;
 
 }
 
