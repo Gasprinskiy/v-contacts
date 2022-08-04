@@ -4,7 +4,13 @@
             placeholder="Search" 
             v-model:value="searhQuerry" 
             @input="splitAndEmitQuerry"
-        />
+        >
+            <template #prefix>
+                <n-icon
+                    :component="SearchOutline"
+                />
+            </template>
+        </n-input>
         <n-select 
             v-model:value="selectValue" 
             :options="selectOptions"
@@ -18,6 +24,7 @@
 
 // imports
 import { NIcon, NInput, NSelect } from 'naive-ui'
+import { SearchOutline } from '@vicons/ionicons5'
 import { defineProps, defineEmits, computed ,ref } from 'vue'
 /////////////
 
