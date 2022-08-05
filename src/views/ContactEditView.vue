@@ -43,6 +43,8 @@ const removeContact = async (value) => {
         })
     })
 }
+
+
 /////////////
 
 </script>

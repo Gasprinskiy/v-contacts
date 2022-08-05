@@ -25,7 +25,7 @@
 // imports
 import { NIcon, NInput, NSelect } from 'naive-ui'
 import { SearchOutline } from '@vicons/ionicons5'
-import { defineProps, defineEmits, computed ,ref } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 /////////////
 
 // emits
@@ -41,12 +41,6 @@ const props = defineProps({
 })
 /////////////
 
-// computed
-const selected = computed(() => selectValue.value !== '')
-const splitedQuerry = computed(() => searhQuerry.value !== '' ? searhQuerry.value.split(/\s/g) : '')
-const isEmpty = computed(()=> searhQuerry.value === '' && selectValue.value === '')
-/////////////
-
 // data 
 const searhQuerry = ref('')
 const selectValue = ref('')
@@ -59,12 +53,14 @@ const selectOptions = ref([
 /////////////
 
 // methods 
-const splitAndEmitQuerry = () => {
-    emits('input-querry', splitedQuerry.value, selectValue.value)
+const splitAndEmitQuerry = (e) => {
+    const value = e.split(/\s/g).filter(item => item !== '')
+    emits('input-querry', value, selectValue.value)
 }
 
 const emitSelectUpdate = (value) => {
-    emits('select-update', splitedQuerry.value, value)
+    const querryValue = searhQuerry.value.split(/\s/g).filter(item => item !== '')
+    emits('select-update', querryValue, value)
 }
 /////////////
 

@@ -51,7 +51,7 @@
             <n-input
                 type="text"
                 placeholder="Full Name"
-                v-model:value="formValues.fullname"
+                v-model:value.trim="formValues.fullname"
                 :status="isFullnameValid"
             >
                 <template #prefix>
@@ -77,7 +77,7 @@
             <n-input
                 type="text"
                 placeholder="Email"
-                v-model:value="formValues.email"
+                v-model:value.trim="formValues.email"
                 :status="isEmailValid"
             >
                 <template #prefix>
@@ -143,7 +143,7 @@ const isRedact = computed(()=> route.meta.isRedact)
 const title = computed(()=> route.meta.isRedact ? 'Edit' : 'Create')
 const emailValidationRule = computed(()=> formValues.email !== '' ? { email } : {minLength: minLength(0)})
 
-const isValuesUnchanged = computed (()=> JSON.stringify(formValues.value) === sourceFormValue.value)
+const isValuesUnchanged = computed(()=> JSON.stringify(formValues.value) === sourceFormValue.value)
 const isFullnameValid = computed(()=> (v$.value.fullname.$dirty && v$.value.fullname.$invalid) ? 'error' : '')
 const isPhonenumberValid = computed(()=> (v$.value.phonenumber.$dirty && v$.value.phonenumber.$invalid) ? 'error' : '')
 const isEmailValid = computed(()=> (v$.value.email.$dirty && v$.value.email.$invalid) ? 'error' : '')
@@ -188,7 +188,7 @@ const validateAndEmitContactCreateOperation = () => {
 const validateAndEmitSaveContactChanges = () => {
     validateAndEmitCaller({
         emitName: 'edit-contact',
-        payload: toRaw(formValues.value)
+        payload: createPayload()
     })
     sourceFormValue.value = JSON.stringify(formValues.value)
 }
@@ -213,6 +213,8 @@ const getDataUserDataByRouteParams = async () => {
         })
     }
 }
+
+// const noSideSpace = (value) => value.trim()
 /////////////
 
 //hooks

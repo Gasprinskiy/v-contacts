@@ -52,7 +52,7 @@
 <script setup>
 
 // imports
-import { getSortedData, searchInDbByKeyWords } from '../services/dbRequests/'
+import { getSortedData, searchInDbByKeyWord, searchInDbByKeyWordsIfQuerryMoreThenOneString } from '../services/dbRequests/'
 import { onBeforeMount, ref, computed } from 'vue'
 
 import headingTemplate from '../components/templates/headingTemplate.vue'
@@ -80,16 +80,22 @@ const getSortedContactList = async () => {
 }
 
 const searchDataInDb = async (querry, selectedVal) => {
-    const empty = (querry === '' && selectedVal === '')
+    const empty = (querry.length <= 0 && selectedVal === '')
     searchMode.value = !empty
-    if(!empty){
-        searchData.value  = await searchInDbByKeyWords({
-            target: 'contacts',
-            where: ['name', 'surname', 'patronymic', 'email', 'phonenumber'],
-            words: querry,
-            filtertarget: 'group',
-            filtervalue: selectedVal
-        })
+    const options = {
+        target: 'contacts',
+        where: ['fullname','name', 'surname', 'patronymic', 'otherwords', 'email', 'phonenumber'],
+        words: querry,
+        filtertarget: 'group',
+        filtervalue: selectedVal
+    }
+    if(!empty && querry.length === 1){
+        searchData.value = await searchInDbByKeyWord(options)
+        return
+    }
+    if(!empty && querry.length > 1) {
+        searchData.value = await searchInDbByKeyWordsIfQuerryMoreThenOneString(options, {includkey: 'fullname'})
+        return
     }
 }
 
